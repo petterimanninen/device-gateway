@@ -1,1 +1,1 @@
-"# device-gateway" 
+This is an example of self-registering iot device gateway for Oracle IoT Cloud Service. This gateway supports Particle Photon (Wifi) and Electron (3G) and Thnxtra XKit (Sigfox). When adding a new device you need to create the data model to iotcs and add/modify the gateway to transform the payload. Gateway will register the device and send messages to iotcs. This gw is created for demos and not for production use as it dynamically registers all new devices. 
