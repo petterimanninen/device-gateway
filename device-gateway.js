@@ -314,11 +314,26 @@ app.post('/xkit', function (req, res) {
     res.end();
 });
 
+app.post('/test', function (req, res) {
+    res.send(JSON.stringify({ result: "Success"}));
+    res.end();
+});
+
+app.get('/test', function (req, res) {
+    res.send(JSON.stringify({ result: "Success"}));
+    res.end();
+});
+
+app.get('/', function (req, res) {
+    res.send("<html><head><title>PMa IoTCS GW</title><body><p>This gateway accepts POSTs to /photon /electron /xkit /test and GETs to /test</p></body></html>");
+    res.end();
+});
+
 
 //////////////////////////////////////////////////////////
 // Start listener
 //////////////////////////////////////////////////////////
 var server = app.listen(port, function () {
   console.log("App listening on port %s", port);
-  console.log("Listening for calls to: '/post'");
+  console.log("Listening for POSTs to '/photon /electron /xkit /test and GETs to / /test'");
 })
