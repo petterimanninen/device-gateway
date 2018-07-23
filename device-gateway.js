@@ -31,6 +31,7 @@ var IoTServer = require('./jsclient/iot.js');
 var sharedSecret = "secret"; // used for initiating communication with iotcs
 var deviceId = null; // device id found by list devices
 var device = null; // device connection
+/*
 var deviceMetadata = // device metadata - device serial number must be unique for all similar devices
 {
   manufacturer: "Manufacturer",
@@ -38,6 +39,19 @@ var deviceMetadata = // device metadata - device serial number must be unique fo
   modelNumber: "Device Model",
   serialNumber: "Device Unique Serial Number" // has to be unique
 };
+*/
+
+function DeviceMetadata(manufacturer, description, modelNumber, serialNumber)
+{
+	this.manufacturer = manufacturer;
+	this.description = description;
+	this.modelNumber = modelNumber;
+	this.serialNumber = serialNumber; // filled when activated, must be unique
+}
+
+var photonMetadata = new DeviceMetadata("Particle", "Photon with temperature, humidity and lumiosity sensors", "Particle Photon","");
+var electronMetadata = new DeviceMetadata("Particle", "Electron with temperature, humidity and lumiosity sensors", "Particle Electron","");
+var xkitMetadata = new DeviceMetadata("Thinxtra", "Thinxtra XKit with temperature, pressure and lumiosity sensors", "Thinxtra XKit","");
 
 // prevent multiple parallel activations for same device - particle sends multiple messages in sequence
 // should use a better semaphore but maybe later ...
@@ -48,8 +62,8 @@ var inActivationId = "";
 var iot = new IoTServer(iotaddr);
 iot.setPrincipal(iotuser, iotpass);
 
-// send incoming messages from particle.io to iotcs
-function sendToIotCS(iotDeviceId, iotDeviceName, iotDeviceUrn, iotDataUrn, iotPayload)
+// send incoming messages from gateway to iotcs
+function sendToIotCS(iotDeviceId, iotDeviceName, iotDeviceUrn, iotDataUrn, iotPayload, deviceMetadata)
 {
 	// search for an activated device with right name = name + particle code id
 	var query ={"name":iotDeviceId,"state":"ACTIVATED"};
@@ -113,11 +127,7 @@ function sendToIotCS(iotDeviceId, iotDeviceName, iotDeviceUrn, iotDataUrn, iotPa
 			console.log("no devices found, activating ...");
 			
 			// register and activate device, set metadata
-			deviceMetadata.manufacturer = "Particle";
-			deviceMetadata.description = "Wifi Particle with temperature, humidity and lumiosity sensors";
-			deviceMetadata.modelNumber = "Particle Wifi";
-			deviceMetadata.serialNumber = iotDeviceId; // has to be unique, using particls coreid
-			
+			deviceMetadata.serialNumber = iotDeviceId; // has to be unique, value from device
 			console.log("Device metadata: " + JSON.stringify(deviceMetadata));
 
 			// register new device, a directly connected device
@@ -181,7 +191,7 @@ function sendToIotCS(iotDeviceId, iotDeviceName, iotDeviceUrn, iotDataUrn, iotPa
 // }
 
 // wait for incoming messages from particle.io
-app.post('/particle', function (req, res) {
+app.post('/photon', function (req, res) {
 	var iotDeviceUrn = "urn:particle:photon";
 	var iotDataUrn   = "urn:particle:photon:format";
 	var iotDeviceName = "Particle Photon";
@@ -223,7 +233,7 @@ app.post('/particle', function (req, res) {
 	}
 
 	console.log("Send to iotcs: " + iotDeviceName + "(" + iotDeviceId + ") urn(" + iotDeviceUrn + ") data(" + iotDataUrn + ") message:" + JSON.stringify(iotPayload));
-    sendToIotCS(iotDeviceId, iotDeviceName, iotDeviceUrn, iotDataUrn, iotPayload);
+    sendToIotCS(iotDeviceId, iotDeviceName, iotDeviceUrn, iotDataUrn, iotPayload, photonMetadata);
 
     // Respond async.  No need for transactional.
     res.send(JSON.stringify({ result: "Success"}));
@@ -273,7 +283,7 @@ app.post('/electron', function (req, res) {
 	}
 
 	console.log("Send to iotcs: " + iotDeviceName + "(" + iotDeviceId + ") urn(" + iotDeviceUrn + ") data(" + iotDataUrn + ") message:" + JSON.stringify(iotPayload));
-    sendToIotCS(iotDeviceId, iotDeviceName, iotDeviceUrn, iotDataUrn, iotPayload);
+    sendToIotCS(iotDeviceId, iotDeviceName, iotDeviceUrn, iotDataUrn, iotPayload, electronMetadata);
 
     // Respond async.  No need for transactional.
     res.send(JSON.stringify({ result: "Success"}));
@@ -307,7 +317,7 @@ app.post('/xkit', function (req, res) {
 	iotPayload = {temperature : payload.temperature, pressure : payload.pressure, lumiosity : payload.photo, accelerationX : payload.x_accelerator,  accelerationY : payload.y_accelerator,  accelerationZ : payload.z_accelerator };
 
 	console.log("Send to iotcs: " + iotDeviceName + "(" + iotDeviceId + ") urn(" + iotDeviceUrn + ") data(" + iotDataUrn + ") message:" + JSON.stringify(iotPayload));
-    sendToIotCS(iotDeviceId, iotDeviceName, iotDeviceUrn, iotDataUrn, iotPayload);
+    sendToIotCS(iotDeviceId, iotDeviceName, iotDeviceUrn, iotDataUrn, iotPayload, xkitMetadata);
 
     // Respond async.  No need for transactional.
     res.send(JSON.stringify({ result: "Success"}));
