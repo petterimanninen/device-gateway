@@ -6,7 +6,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"; // Avoids DEPTH_ZERO_SELF_SIGNED
 // Config for IoTCS instance
 // Read Environment Parameters from Oracle Application Container Cloud Service (ACCS)
 // If no env variables are there, use default values.
-var port = Number(process.env.PORT || 9905);
+var port = Number(process.env.PORT || 8080);
 //var iotaddr = process.env.IOTADDR ||"https://X.X.X.X:443"; // my iot cloud base URL
 //var iotuser = process.env.IOTUSER || "user";  // username for iot cloud
 //var iotpass = process.env.IOTPASS || "password"; // password for iot cloud
