@@ -10,9 +10,6 @@ var port = Number(process.env.PORT || 9905);
 //var iotaddr = process.env.IOTADDR ||"https://X.X.X.X:443"; // my iot cloud base URL
 //var iotuser = process.env.IOTUSER || "user";  // username for iot cloud
 //var iotpass = process.env.IOTPASS || "password"; // password for iot cloud
-var iotaddr = process.env.IOTADDR ||"https://130.162.68.137:443"; // my iot cloud base URL
-var iotuser = process.env.IOTUSER || "IoTAdmin";  // username for iot cloud
-var iotpass = process.env.IOTPASS || "Welcome1#"; // password for iot cloud
 
 // Setup node & express
 var express = require('express');
