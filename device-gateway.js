@@ -47,7 +47,7 @@ function DeviceMetadata(manufacturer, description, modelNumber, serialNumber)
 }
 
 var photonMetadata = new DeviceMetadata("Particle", "Photon with temperature, humidity and lumiosity sensors", "Particle Photon","");
-var electronMetadata = new DeviceMetadata("Particle", "Electron with temperature, humidity and lumiosity sensors", "Particle Electron","");
+var electronMetadata = new DeviceMetadata("Particle", "Electron with temperature, humidity, lumiosity and movement sensors + battery level", "Particle Electron","");
 var xkitMetadata = new DeviceMetadata("Thinxtra", "Thinxtra XKit with temperature, pressure and lumiosity sensors", "Thinxtra XKit","");
 
 // prevent multiple parallel activations for same device - particle sends multiple messages in sequence
