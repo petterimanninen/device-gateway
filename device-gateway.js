@@ -272,7 +272,15 @@ app.post('/electron', function (req, res) {
 			console.log("data.temperature = " + sensorData.temperature);
 			console.log("data.humidity    = " + sensorData.humidity);
 			console.log("data.lumiosity   = " + sensorData.lumiosity);
-			iotPayload = {temperature : sensorData.temperature, humidity : sensorData.humidity, lumiosity : sensorData.lumiosity};
+			console.log("data.movement    = " + sensorData.movement);
+			console.log("data.power       = " + sensorData.power);
+			iotPayload = {
+				temperature : sensorData.temperature, 
+				humidity : sensorData.humidity, 
+				lumiosity : sensorData.lumiosity,
+				movement : sensorData.movement,
+				power : sensorData.power
+			};
 			break;
 		default:
 			iotPayload = {};
