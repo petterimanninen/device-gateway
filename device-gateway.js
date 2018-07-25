@@ -256,7 +256,7 @@ app.post('/electron', function (req, res) {
 	console.log("time="+payload.published_at);
 
 	// set device device id for this device
-	var iotDeviceId = "ParticleWifi_"+payload.coreid;
+	var iotDeviceId = "Particle_Electron_3gLogger_"+payload.coreid;
 	switch(payload.event) {
 		case "Temp":
 			iotPayload = { temperature : payload.data };
