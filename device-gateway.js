@@ -46,9 +46,9 @@ function DeviceMetadata(manufacturer, description, modelNumber, serialNumber)
 	this.serialNumber = serialNumber; // filled when activated, must be unique
 }
 
-var photonMetadata = new DeviceMetadata("Particle", "Photon with temperature, humidity and lumiosity sensors", "Particle Photon","");
-var electronMetadata = new DeviceMetadata("Particle", "Electron with temperature, humidity, lumiosity and movement sensors + battery level", "Particle Electron","");
-var xkitMetadata = new DeviceMetadata("Thinxtra", "Thinxtra XKit with temperature, pressure and lumiosity sensors", "Thinxtra XKit","");
+var photonMetadata = new DeviceMetadata("Particle", "Photon with temperature, humidity and luminosity sensors", "Particle Photon","");
+var electronMetadata = new DeviceMetadata("Particle", "Electron with temperature, humidity, luminosity and movement sensors + battery level(0-85,100=ext.power)", "Particle Electron","");
+var xkitMetadata = new DeviceMetadata("Thinxtra", "Thinxtra XKit with temperature, pressure and luminosity sensors", "Thinxtra XKit","");
 
 // prevent multiple parallel activations for same device - particle sends multiple messages in sequence
 // should use a better semaphore but maybe later ...
@@ -215,14 +215,14 @@ app.post('/photon', function (req, res) {
 			iotPayload = { humidity : payload.data };
 			break;
 		case "Light":
-			iotPayload = { lumiosity : payload.data };
+			iotPayload = { luminosity : payload.data };
 			break;
 		case "Data":
 			var sensorData = JSON.parse(payload.data);
 			console.log("data.temperature = " + sensorData.temperature);
 			console.log("data.humidity    = " + sensorData.humidity);
-			console.log("data.lumiosity   = " + sensorData.lumiosity);
-			iotPayload = {temperature : sensorData.temperature, humidity : sensorData.humidity, lumiosity : sensorData.lumiosity};
+			console.log("data.luminosity   = " + sensorData.luminosity);
+			iotPayload = {temperature : sensorData.temperature, humidity : sensorData.humidity, luminosity : sensorData.luminosity};
 			break;
 		default:
 			iotPayload = {};
@@ -265,19 +265,19 @@ app.post('/electron', function (req, res) {
 			iotPayload = { humidity : payload.data };
 			break;
 		case "Light":
-			iotPayload = { lumiosity : payload.data };
+			iotPayload = { luminosity : payload.data };
 			break;
 		case "Data":
 			var sensorData = JSON.parse(payload.data);
-			console.log("data.temperature = " + sensorData.temp);
-			console.log("data.humidity    = " + sensorData.hum);
-			console.log("data.lumiosity   = " + sensorData.lum);
-			console.log("data.movement    = " + sensorData.pir);
-			console.log("data.power       = " + sensorData.pwr);
+			console.log("data.temperature  = " + sensorData.temp);
+			console.log("data.humidity     = " + sensorData.hum);
+			console.log("data.luminosity   = " + sensorData.lum);
+			console.log("data.movement     = " + sensorData.pir);
+			console.log("data.power        = " + sensorData.pwr);
 			iotPayload = {
 				temperature : sensorData.temp, 
 				humidity : sensorData.hum, 
-				lumiosity : sensorData.lum,
+				luminosity : sensorData.lum,
 				movement : sensorData.pir,
 				power : sensorData.pwr
 			};
@@ -303,7 +303,7 @@ app.post('/xkit', function (req, res) {
 	var iotDataUrn   = "urn:thinxtra:xkit:format";
 	var iotDeviceName = "thinxtra";
 	
-	// data model for xkit: { "temperature" : 0, "pressure" : 0, "lumiosity" : 0, accelerationX : 0, accelerationY : 0, accelerationZ : 0};
+	// data model for xkit: { "temperature" : 0, "pressure" : 0, "luminosity" : 0, accelerationX : 0, accelerationY : 0, accelerationZ : 0};
 	var iotPayload = "";
 
     var payload = req.body;
@@ -319,7 +319,7 @@ app.post('/xkit', function (req, res) {
     payload.z_accelerator = payload.z_accelerator/250;
 
 	var iotDeviceId = "xkit_"+req.body.device;
-	iotPayload = {temperature : payload.temperature, pressure : payload.pressure, lumiosity : payload.photo, accelerationX : payload.x_accelerator,  accelerationY : payload.y_accelerator,  accelerationZ : payload.z_accelerator };
+	iotPayload = {temperature : payload.temperature, pressure : payload.pressure, luminosity : payload.photo, accelerationX : payload.x_accelerator,  accelerationY : payload.y_accelerator,  accelerationZ : payload.z_accelerator };
 
 	console.log("Send to iotcs: " + iotDeviceName + "(" + iotDeviceId + ") urn(" + iotDeviceUrn + ") data(" + iotDataUrn + ") message:" + JSON.stringify(iotPayload));
     sendToIotCS(iotDeviceId, iotDeviceName, iotDeviceUrn, iotDataUrn, iotPayload, xkitMetadata);
