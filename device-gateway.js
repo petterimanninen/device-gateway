@@ -239,8 +239,8 @@ app.post('/photon', function (req, res) {
 
 // wait for incoming messages from particle.io
 app.post('/electron', function (req, res) {
-	var iotDeviceUrn = "urn:particle:electron";
-	var iotDataUrn   = "urn:particle:electron:format";
+	var iotDeviceUrn = "urn:particle:electron:3glogger";
+	var iotDataUrn   = "urn:particle:electron:3glogger:format";
 	var iotDeviceName = "Particle Electron";
 	
 	// data model for particle: { "temperature" : 0, "humidity" : 0, "lumiosity" : 0 };
